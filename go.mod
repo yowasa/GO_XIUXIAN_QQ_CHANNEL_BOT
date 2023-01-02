@@ -1,6 +1,6 @@
 module GO_XIUXIAN_QQ_CHANNEL_BOT
 
-go 1.15
+go 1.19
 
 require (
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
