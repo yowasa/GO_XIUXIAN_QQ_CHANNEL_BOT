@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"GO_XIUXIAN_QQ_CHANNEL_BOT/model"
 	"github.com/robfig/cron"
 	"github.com/tencent-connect/botgo"
 	"github.com/tencent-connect/botgo/dto"
@@ -21,7 +22,7 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-//Config 定义了配置文件的结构
+// Config 定义了配置文件的结构
 type Config struct {
 	AppID         uint64 `yaml:"appid"`         //机器人的appid
 	Token         string `yaml:"token"`         //机器人的token
@@ -29,14 +30,14 @@ type Config struct {
 	TestChannelId string `yaml:"testChannelId"` //机器人的token
 }
 
-//WeatherResp 定义了返回天气数据的结构
+// WeatherResp 定义了返回天气数据的结构
 type WeatherResp struct {
 	Success    string `json:"success"` //标识请求是否成功，0表示成功，1表示失败
 	ResultData Result `json:"result"`  //请求成功时，获取的数据
 	Msg        string `json:"msg"`     //请求失败时，失败的原因
 }
 
-//Result 定义了具体天气数据结构
+// Result 定义了具体天气数据结构
 type Result struct {
 	Days            string `json:"days"`             //日期，例如2022-03-01
 	Week            string `json:"week"`             //星期几
@@ -56,7 +57,7 @@ var config Config
 var api openapi.OpenAPI
 var ctx context.Context
 
-//第一步： 获取机器人的配置信息，即机器人的appid和token
+// 第一步： 获取机器人的配置信息，即机器人的appid和token
 func init() {
 	content, err := ioutil.ReadFile("config.yaml")
 	if err != nil {
@@ -72,7 +73,7 @@ func init() {
 	log.Println(config)
 }
 
-//定义常量
+// 定义常量
 const (
 	CmdDirectChatMsg        = "/私信天气"
 	CmdNowWeather           = "/当前天气"
@@ -82,6 +83,7 @@ const (
 	CmdTestAtRpDirectEmbed  = "#tde"
 	CmdTestDirectRpNormal   = "#dtn"
 	CmdTestDirectRpEmbed    = "#dte"
+	CmdTestUserExist        = "#exist"
 )
 
 func directMessageEventHandler(event *dto.WSPayload, data *dto.WSDirectMessageData) error {
@@ -99,7 +101,7 @@ func directMessageEventHandler(event *dto.WSPayload, data *dto.WSDirectMessageDa
 	return nil
 }
 
-//atMessageEventHandler 处理 @机器人 的消息
+// atMessageEventHandler 处理 @机器人 的消息
 func atMessageEventHandler(event *dto.WSPayload, data *dto.WSATMessageData) error {
 	res := message.ParseCommand(data.Content) //去掉@结构和清除前后空格
 	log.Println("cmd = " + res.Cmd + " content = " + res.Content)
@@ -131,6 +133,16 @@ func atMessageEventHandler(event *dto.WSPayload, data *dto.WSATMessageData) erro
 		}
 		api.PostDirectMessage(ctx, directMsg, &dto.MessageToCreate{Embed: createTestEmbed(data.Author.Avatar)})
 
+	case CmdTestUserExist:
+		//var db = model.GetDB()
+		var user model.User
+		user.UserId = data.Author.ID
+		if !user.Exist() {
+			api.PostMessage(ctx, data.ChannelID, &dto.MessageToCreate{MsgID: data.ID, Content: "用户不存在"})
+		} else {
+			api.PostMessage(ctx, data.ChannelID, &dto.MessageToCreate{MsgID: data.ID, Content: "用户存在"})
+		}
+
 	case CmdNowWeather: //获取当前天气 指令是 /天气 城市名
 		webData := getWeatherByCity(content)
 		if webData != nil {
@@ -158,6 +170,7 @@ func atMessageEventHandler(event *dto.WSPayload, data *dto.WSATMessageData) erro
 }
 
 func main() {
+
 	//第二步：生成token，用于校验机器人的身份信息
 	token := token.BotToken(config.AppID, config.Token)
 	//第三步：获取操作机器人的API对象
@@ -180,7 +193,7 @@ func main() {
 	botgo.NewSessionManager().Start(ws, token, &intent)            // 启动socket监听
 }
 
-//获取对应城市的天气数据
+// 获取对应城市的天气数据
 func getWeatherByCity(cityName string) *WeatherResp {
 	url := "http://api.k780.com/?app=weather.today&cityNm=" + cityName + "&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json"
 	resp, err := http.Get(url)
@@ -207,7 +220,7 @@ func getWeatherByCity(cityName string) *WeatherResp {
 	return &weatherData
 }
 
-//registerMsgPush 注册定时器
+// registerMsgPush 注册定时器
 func registerMsgPush() {
 	var activeMsgPush = func() {
 		channelId := config.TestChannelId
@@ -241,7 +254,7 @@ func createTestEmbed(url string) *dto.Embed {
 	}
 }
 
-//获取 Embed
+// 获取 Embed
 func createEmbed(weather *WeatherResp) *dto.Embed {
 	return &dto.Embed{
 		Title: weather.ResultData.CityNm + " " + weather.ResultData.Weather,
@@ -271,7 +284,7 @@ func createEmbed(weather *WeatherResp) *dto.Embed {
 	}
 }
 
-//创建23号的Ark
+// 创建23号的Ark
 func createArkForTemplate23(weather *WeatherResp) *dto.Ark {
 	return &dto.Ark{
 		TemplateID: 23,
@@ -279,7 +292,7 @@ func createArkForTemplate23(weather *WeatherResp) *dto.Ark {
 	}
 }
 
-//创建Ark需要的ArkKV数组
+// 创建Ark需要的ArkKV数组
 func createArkKvArray(weather *WeatherResp) []*dto.ArkKV {
 	akvArray := make([]*dto.ArkKV, 3)
 	akvArray[0] = &dto.ArkKV{
@@ -297,7 +310,7 @@ func createArkKvArray(weather *WeatherResp) []*dto.ArkKV {
 	return akvArray
 }
 
-//创建ArkKV需要的ArkObj数组
+// 创建ArkKV需要的ArkObj数组
 func createArkObjArray(weather *WeatherResp) []*dto.ArkObj {
 	objectArray := []*dto.ArkObj{
 		{
