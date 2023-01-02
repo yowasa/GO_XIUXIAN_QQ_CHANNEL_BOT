@@ -1,5 +1,5 @@
-appid: 10000000
-token: "token"
-guildId: 10000000
-testChannelId: 10000000
-mysql: "user:pwd@tcp(ip:3306)/scheme?charset=utf8mb4&parseTime=True&loc=Local"
+appid: 101987654
+token: "Uc7dhsdCdHCIjHEuA8Oi4aLg5abDzZ6A"
+guildId: 17461129748268873427
+testChannelId: 2086138
+mysql: "root:123456@tcp(81.69.241.164:3306)/xiuxian_dev?charset=utf8mb4&parseTime=True&loc=Local"

@@ -1,0 +1,5 @@
+appid: 10000000
+token: "token"
+guildId: 10000000
+testChannelId: 10000000
+mysql: "user:pwd@tcp(ip:3306)/scheme?charset=utf8mb4&parseTime=True&loc=Local"
