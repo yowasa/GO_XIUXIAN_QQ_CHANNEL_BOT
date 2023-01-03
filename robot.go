@@ -1,16 +1,10 @@
 package main
 
 import (
+	"GO_XIUXIAN_QQ_CHANNEL_BOT/cfg"
+	"GO_XIUXIAN_QQ_CHANNEL_BOT/model"
 	"context"
 	"encoding/json"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"os"
-	"strings"
-	"time"
-
-	"GO_XIUXIAN_QQ_CHANNEL_BOT/model"
 	"github.com/robfig/cron"
 	"github.com/tencent-connect/botgo"
 	"github.com/tencent-connect/botgo/dto"
@@ -19,16 +13,13 @@ import (
 	"github.com/tencent-connect/botgo/openapi"
 	"github.com/tencent-connect/botgo/token"
 	"github.com/tencent-connect/botgo/websocket"
-	yaml "gopkg.in/yaml.v2"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"os"
+	"strings"
+	"time"
 )
-
-// Config 定义了配置文件的结构
-type Config struct {
-	AppID         uint64 `yaml:"appid"`         //机器人的appid
-	Token         string `yaml:"token"`         //机器人的token
-	GuildId       uint64 `yaml:"guildId"`       //机器人的appid
-	TestChannelId string `yaml:"testChannelId"` //机器人的token
-}
 
 // WeatherResp 定义了返回天气数据的结构
 type WeatherResp struct {
@@ -53,25 +44,9 @@ type Result struct {
 	WeatherIcon     string `json:"weather_icon"`     //气象图标
 }
 
-var config Config
+var config = cfg.GetConfig()
 var api openapi.OpenAPI
 var ctx context.Context
-
-// 第一步： 获取机器人的配置信息，即机器人的appid和token
-func init() {
-	content, err := ioutil.ReadFile("config.yaml")
-	if err != nil {
-		log.Println("读取配置文件出错， err = ", err)
-		os.Exit(1)
-	}
-
-	err = yaml.Unmarshal(content, &config)
-	if err != nil {
-		log.Println("解析配置文件出错， err = ", err)
-		os.Exit(1)
-	}
-	log.Println(config)
-}
 
 // 定义常量
 const (
