@@ -76,6 +76,12 @@ func directMessageEventHandler(event *dto.WSPayload, data *dto.WSDirectMessageDa
 	return nil
 }
 
+// return msg todo
+func sendMsg(data *dto.WSATMessageData, msg string) {
+	api.PostMessage(ctx, data.ChannelID, &dto.MessageToCreate{MsgID: data.ID, Content: msg})
+
+}
+
 // atMessageEventHandler 处理 @机器人 的消息
 func atMessageEventHandler(event *dto.WSPayload, data *dto.WSATMessageData) error {
 	res := message.ParseCommand(data.Content) //去掉@结构和清除前后空格
@@ -113,7 +119,13 @@ func atMessageEventHandler(event *dto.WSPayload, data *dto.WSATMessageData) erro
 		var user model.User
 		user.UserId = data.Author.ID
 		if !user.Exist() {
-			api.PostMessage(ctx, data.ChannelID, &dto.MessageToCreate{MsgID: data.ID, Content: "用户不存在"})
+			if user.ExistName(content) {
+				sendMsg(data, "用户名已存在")
+			} else {
+				user.NewUser(content)
+				user.Create()
+				sendMsg(data, "角色: "+content+" 已创建")
+			}
 		} else {
 			api.PostMessage(ctx, data.ChannelID, &dto.MessageToCreate{MsgID: data.ID, Content: "用户存在"})
 		}

@@ -1,5 +1,12 @@
 package model
 
+import (
+	"GO_XIUXIAN_QQ_CHANNEL_BOT/util"
+	"encoding/json"
+	"log"
+	"os"
+)
+
 // 数据库User
 type User struct {
 	Id       int64 `gorm:"primary_key" json:"id"`
@@ -7,21 +14,41 @@ type User struct {
 	UserName string
 	Con      int64
 	Agi      int64
+	TiZhi    int    // 体质
+	MinJie   int    // 敏捷
+	LingGen  string // 灵根
 	BaseInfo string
 }
 
+var lingGenList = []string{"金", "木", "水", "火", "土"}
+
 // NewUser :create new user by name and id/*
-func NewUser(name string, userId string) *User {
-	var user User = User{
-		UserName: name,
-		UserId:   userId,
+func (u User) NewUser(name string) {
+	u.UserName = name
+	setBaseInfo(u) // 设置基础属性值
+}
+func setBaseInfo(user User) {
+	user.TiZhi = util.RandomRange(0, 20)   // 体质
+	user.MinJie = util.RandomRange(0, 100) // 敏捷
+	user.LingGen = getLingGen()            // 灵根
+}
+
+func getLingGen() string {
+	percent := util.RandomDistribution(100, 5)
+	var m = make(map[string]uint)
+	for i := 0; i < 5; i++ {
+		m[lingGenList[i]] = percent[i]
 	}
-	// todo 基本属性值
-	return &user
+	data, err := json.Marshal(&m)
+	if err != nil {
+		log.Println("map转换json出错， err = ", err)
+		os.Exit(1)
+	}
+	return string(data)
 }
 
 func (u User) Exist() bool {
-	db.Where("UserId = ?", u.UserId).First(&u)
+	db.Where("user_id = ?", u.UserId).First(&u)
 	if u.Id == 0 {
 		return false
 	}
@@ -33,17 +60,11 @@ func (u User) Create() {
 }
 
 func (u User) ExistName(name string) bool {
-	db.Where("UserName = ?", name).First(&u)
+	db.Where("user_name = ?", name).First(&u)
 	if u.Id == 0 {
 		return false
 	}
 	return true
-}
-
-// todo
-func getLingGen() string {
-
-	return ""
 }
 
 func (u User) Save() {
