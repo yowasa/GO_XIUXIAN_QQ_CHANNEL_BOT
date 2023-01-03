@@ -17,18 +17,17 @@ import (
 var db *gorm.DB
 var config = cfg.GetConfig()
 
-func GetDB() *gorm.DB {
-	return db
-}
-
 func init() {
 	dsn := config.Mysql
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	myDb, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(db)
-	db.AutoMigrate(
+	fmt.Println(myDb)
+	myDb.AutoMigrate(
 		User{},
 	)
+	db = myDb
+
 }

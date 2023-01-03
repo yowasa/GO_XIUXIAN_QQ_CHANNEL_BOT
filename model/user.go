@@ -12,8 +12,6 @@ type User struct {
 	Id       int64 `gorm:"primary_key" json:"id"`
 	UserId   string
 	UserName string
-	Con      int64
-	Agi      int64
 	TiZhi    int    // 体质
 	MinJie   int    // 敏捷
 	LingGen  string // 灵根
@@ -23,12 +21,12 @@ type User struct {
 var lingGenList = []string{"金", "木", "水", "火", "土"}
 
 // NewUser :create new user by name and id/*
-func (u User) NewUser(name string) {
+func (u *User) NewUser(name string) {
 	u.UserName = name
 	setBaseInfo(u) // 设置基础属性值
 }
-func setBaseInfo(user User) {
-	user.TiZhi = util.RandomRange(0, 20)   // 体质
+func setBaseInfo(user *User) {
+	user.TiZhi = util.RandomRange(20, 100) // 体质
 	user.MinJie = util.RandomRange(0, 100) // 敏捷
 	user.LingGen = getLingGen()            // 灵根
 }

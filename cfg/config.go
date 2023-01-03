@@ -1,8 +1,7 @@
 package cfg
 
 import (
-	yaml "gopkg.in/yaml.v2"
-	"io/ioutil"
+	"gopkg.in/yaml.v2"
 	"log"
 	"os"
 )
@@ -22,7 +21,7 @@ func GetConfig() *Config {
 }
 
 func init() {
-	content, err := ioutil.ReadFile("config.yaml")
+	content, err := os.ReadFile("config.yaml")
 	if err != nil {
 		log.Println("读取配置文件出错， err = ", err)
 		os.Exit(1)
