@@ -32,6 +32,11 @@ func (bot *BotInfo) ReplayMsg(msg string) {
 	bot.Api.PostMessage(bot.Ctx, bot.Data.ChannelID, &dto.MessageToCreate{MsgID: bot.Data.ID, Content: msg, MessageReference: &dto.MessageReference{MessageID: bot.Data.ID}})
 }
 
+// ReplayEmbedMsg 回复子频道发送Embed信息(引用回复)
+func (bot *BotInfo) ReplayEmbedMsg(msg *dto.Embed) {
+	bot.Api.PostMessage(bot.Ctx, bot.Data.ChannelID, &dto.MessageToCreate{Embed: msg})
+}
+
 // ReplayMsgNotRef 回复子频道发送信息(不引用回复)
 func (bot *BotInfo) ReplayMsgNotRef(msg string) {
 	bot.Api.PostMessage(bot.Ctx, bot.Data.ChannelID, &dto.MessageToCreate{MsgID: bot.Data.ID, Content: msg})
@@ -68,19 +73,8 @@ func (bot *BotInfo) SendDirectMsg(userId string, msg string) {
 	bot.Api.PostDirectMessage(bot.Ctx, directMsg, &dto.MessageToCreate{Content: msg})
 }
 
-var (
-	// ATFilter 过滤at信息
-	ATFilter = make(map[string]func(bot *BotInfo))
-	// DirectFilter 过滤私信信息
-	DirectFilter = make(map[string]func(bot *BotInfo))
-)
-
 // 初始化 将指令与方法注册进去
 func init() {
 	ATFilter["/test"] = testFilter
 	ATFilter["开始修仙"] = CreateUserFilter
-}
-
-func testFilter(botInfo *BotInfo) {
-	botInfo.ReplayMsg("测试filter成功")
 }
