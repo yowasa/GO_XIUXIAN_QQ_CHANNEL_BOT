@@ -111,7 +111,7 @@ func atMessageEventHandler(event *dto.WSPayload, data *dto.WSATMessageData) erro
 			RecipientID:   data.Author.ID,
 		})
 		if err != nil {
-			log.Println("私信创建出错了，err = ", err)
+			log.Println("私信创建出错了 ，err = ", err)
 		}
 		api.PostDirectMessage(ctx, directMsg, &dto.MessageToCreate{Embed: createTestEmbed(data.Author.Avatar)})
 
