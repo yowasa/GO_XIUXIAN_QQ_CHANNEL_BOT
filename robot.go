@@ -166,6 +166,10 @@ func atMessageEventHandler(event *dto.WSPayload, data *dto.WSATMessageData) erro
 			CurrentUser: &user,
 		}
 		if !user.Exist() {
+			if strings.EqualFold(cmd, "开始修仙") {
+				com.CreateUserFilter(&myBot)
+				return nil
+			}
 			myBot.ReplayMsg("请先创建角色再执行指令！")
 			return nil
 		}

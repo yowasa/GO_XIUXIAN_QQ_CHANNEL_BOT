@@ -78,6 +78,7 @@ var (
 // 初始化 将指令与方法注册进去
 func init() {
 	ATFilter["/test"] = testFilter
+	ATFilter["开始修仙"] = CreateUserFilter
 }
 
 func testFilter(botInfo *BotInfo) {
