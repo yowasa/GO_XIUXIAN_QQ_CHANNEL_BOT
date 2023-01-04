@@ -2,7 +2,6 @@ package com
 
 import (
 	"GO_XIUXIAN_QQ_CHANNEL_BOT/model"
-	"GO_XIUXIAN_QQ_CHANNEL_BOT/util"
 	"context"
 	"github.com/tencent-connect/botgo/dto"
 	"github.com/tencent-connect/botgo/openapi"
@@ -103,23 +102,4 @@ func (bot *BotInfo) SendDirectEmbedMsg(userId string, msg *dto.Embed) {
 		log.Println("私信创建出错了，err = ", err)
 	}
 	bot.Api.PostDirectMessage(bot.Ctx, directMsg, &dto.MessageToCreate{Embed: msg})
-}
-
-var (
-	// ATFilter 过滤at信息
-	ATFilter = make(map[string]func(bot *BotInfo))
-	// DirectFilter 过滤私信信息
-	DirectFilter = make(map[string]func(bot *BotInfo))
-)
-
-// 初始化 将指令与方法注册进去
-func init() {
-	ATFilter["/test"] = testFilter
-	ATFilter["开始修仙"] = CreateUserFilter
-	//DirectFilter["/test"] = testFilter
-}
-
-func testFilter(botInfo *BotInfo) {
-	//botInfo.ReplyDirectMsg("测试filter成功")
-	botInfo.ReplayEmbedMsg(util.BuildEmbed("测试标题", "", []string{"第一行数据", "第二行数据"}))
 }

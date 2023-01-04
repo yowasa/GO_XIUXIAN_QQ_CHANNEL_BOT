@@ -10,8 +10,7 @@ var (
 // 初始化 将指令与方法注册进去
 func init() {
 	ATFilter["/test"] = testFilter
-	ATFilter["/创建角色"] = createUserFilter
-	ATFilter["/个人信息"] = personalInfoFilter
+	ATFilter["个人信息"] = personalInfoFilter
 }
 
 func testFilter(botInfo *BotInfo) {

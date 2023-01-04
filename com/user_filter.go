@@ -1,21 +1,20 @@
 package com
 
-import "GO_XIUXIAN_QQ_CHANNEL_BOT/util"
+import (
+	"GO_XIUXIAN_QQ_CHANNEL_BOT/util"
+	"fmt"
+)
 
-// createUserFilter 创建用户角色
-func createUserFilter(botInfo *BotInfo) {
-	var user = botInfo.CurrentUser
-	if user.Exist() {
-		botInfo.ReplayMsg("您的角色已存在，请勿重复创建")
+// CreateUserFilter 创建新用户
+func CreateUserFilter(bot *BotInfo) {
+	user := bot.CurrentUser
+	if user.ExistName(botInfo.Content) {
+		bot.ReplayMsg("该角色名已存在，请更换角色名")
 		return
 	}
-	if user.ExistName(botInfo.Content) {
-		botInfo.ReplayMsg("该角色名已存在，请更换角色名")
-	} else {
-		user.NewUser(botInfo.Content)
-		user.Create()
-		botInfo.ReplayMsg("角色: " + botInfo.Content + " 创建成功")
-	}
+	user.NewUser(bot.Content)
+	user.Save()
+	bot.ReplayMsg(fmt.Sprintf("拥有%s灵根的%s已经进入修仙界", user.LingGen, user.UserName))
 }
 
 // personalInfoFilter 展示个人信息
