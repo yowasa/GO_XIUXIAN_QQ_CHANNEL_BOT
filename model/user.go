@@ -16,6 +16,7 @@ type User struct {
 	MinJie   int    // 敏捷
 	LingGen  string // 灵根
 	BaseInfo string
+	Dead     bool // 死亡  true为死亡状态
 }
 
 var lingGenList = []string{"金", "木", "水", "火", "土"}
@@ -29,6 +30,7 @@ func setBaseInfo(user *User) {
 	user.TiZhi = util.RandomRange(20, 100) // 体质
 	user.MinJie = util.RandomRange(0, 100) // 敏捷
 	user.LingGen = getLingGen()            // 灵根
+	user.Dead = true
 }
 
 func getLingGen() string {
@@ -46,7 +48,7 @@ func getLingGen() string {
 }
 
 func (u User) Exist() bool {
-	db.Where("user_id = ?", u.UserId).First(&u)
+	db.Where("user_id = ? and dead != 0", u.UserId).First(&u)
 	if u.Id == 0 {
 		return false
 	}
@@ -55,6 +57,10 @@ func (u User) Exist() bool {
 
 func (u User) Create() {
 	db.Create(&u)
+}
+
+func (u *User) UserInfo() {
+	db.Where("user_id = ? and dead != 0", u.UserId).First(&u)
 }
 
 func (u User) ExistName(name string) bool {
