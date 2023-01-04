@@ -111,7 +111,7 @@ func atMessageEventHandler(event *dto.WSPayload, data *dto.WSATMessageData) erro
 			RecipientID:   data.Author.ID,
 		})
 		if err != nil {
-			log.Println("私信创建出错了 ，err = ", err)
+			log.Println("私信创建出错了，err = ", err)
 		}
 		api.PostDirectMessage(ctx, directMsg, &dto.MessageToCreate{Embed: createTestEmbed(data.Author.Avatar)})
 
@@ -167,6 +167,7 @@ func atMessageEventHandler(event *dto.WSPayload, data *dto.WSATMessageData) erro
 		}
 		if !user.Exist() {
 			myBot.ReplayMsg("请先创建角色再执行指令！")
+			return nil
 		}
 		if com.ATFilter[cmd] != nil {
 			com.ATFilter[cmd](&myBot)

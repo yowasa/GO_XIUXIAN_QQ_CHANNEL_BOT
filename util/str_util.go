@@ -2,7 +2,7 @@ package util
 
 import "github.com/tencent-connect/botgo/dto"
 
-// 获取 Embed
+// BuildEmbed 获取 Embed
 func BuildEmbed(title string, picUrl string, msgList []string) *dto.Embed {
 	var fieldList []*dto.EmbedField
 	for _, msg := range msgList {

@@ -27,22 +27,22 @@ type BotInfo struct {
 	//atUser *model.User
 }
 
-// 回复子频道发送信息(引用回复)
+// ReplayMsg 回复子频道发送信息(引用回复)
 func (bot *BotInfo) ReplayMsg(msg string) {
 	bot.Api.PostMessage(bot.Ctx, bot.Data.ChannelID, &dto.MessageToCreate{MsgID: bot.Data.ID, Content: msg, MessageReference: &dto.MessageReference{MessageID: bot.Data.ID}})
 }
 
-// 回复子频道发送信息(不引用回复)
+// ReplayMsgNotRef 回复子频道发送信息(不引用回复)
 func (bot *BotInfo) ReplayMsgNotRef(msg string) {
 	bot.Api.PostMessage(bot.Ctx, bot.Data.ChannelID, &dto.MessageToCreate{MsgID: bot.Data.ID, Content: msg})
 }
 
-// 主动向指定子频道发送信息
+// SendMsg 主动向指定子频道发送信息
 func (bot *BotInfo) SendMsg(channelID string, msg string) {
 	bot.Api.PostMessage(bot.Ctx, channelID, &dto.MessageToCreate{Content: msg})
 }
 
-// 私信回复
+// ReplyDirectMsg 私信回复
 func (bot *BotInfo) ReplyDirectMsg(msg string) {
 	//创建私信会话
 	directMsg, err := bot.Api.CreateDirectMessage(bot.Ctx, &dto.DirectMessageToCreate{
@@ -55,7 +55,7 @@ func (bot *BotInfo) ReplyDirectMsg(msg string) {
 	bot.Api.PostDirectMessage(bot.Ctx, directMsg, &dto.MessageToCreate{MsgID: bot.Data.ID, Content: msg})
 }
 
-// 私信发送 腾讯侧会异步审核
+// SendDirectMsg 私信发送 腾讯侧会异步审核
 func (bot *BotInfo) SendDirectMsg(userId string, msg string) {
 	//创建私信会话
 	directMsg, err := bot.Api.CreateDirectMessage(bot.Ctx, &dto.DirectMessageToCreate{
@@ -69,9 +69,9 @@ func (bot *BotInfo) SendDirectMsg(userId string, msg string) {
 }
 
 var (
-	//过滤at信息
+	// ATFilter 过滤at信息
 	ATFilter = make(map[string]func(bot *BotInfo))
-	//过滤私信信息
+	// DirectFilter 过滤私信信息
 	DirectFilter = make(map[string]func(bot *BotInfo))
 )
 
