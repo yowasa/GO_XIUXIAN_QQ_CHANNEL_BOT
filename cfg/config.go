@@ -9,7 +9,7 @@ import (
 type Config struct {
 	AppID         uint64 `yaml:"appid"`         //机器人的appid
 	Token         string `yaml:"token"`         //机器人的token
-	GuildId       uint64 `yaml:"guildId"`       //频道id
+	GuildId       string `yaml:"guildId"`       //频道id
 	TestChannelId string `yaml:"testChannelId"` //测试自频道id
 	Mysql         string `yaml:"mysql"`         //mysql数据库链接dsn
 }

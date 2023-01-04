@@ -2,6 +2,7 @@ package main
 
 import (
 	"GO_XIUXIAN_QQ_CHANNEL_BOT/cfg"
+	"GO_XIUXIAN_QQ_CHANNEL_BOT/com"
 	"GO_XIUXIAN_QQ_CHANNEL_BOT/model"
 	"context"
 	"encoding/json"
@@ -151,6 +152,24 @@ func atMessageEventHandler(event *dto.WSPayload, data *dto.WSATMessageData) erro
 			//发送私信消息
 			//Embed 传入数据时表示发送的是 Embed
 			api.PostDirectMessage(ctx, directMsg, &dto.MessageToCreate{Embed: createEmbed(webData)})
+		}
+	default:
+		var user model.User
+		user.UserId = data.Author.ID
+		myBot := com.BotInfo{
+			GuildID:     config.GuildId,
+			Api:         api,
+			Ctx:         ctx,
+			Event:       event,
+			Data:        data,
+			Content:     content,
+			CurrentUser: &user,
+		}
+		if !user.Exist() {
+			myBot.ReplayMsg("请先创建角色再执行指令！")
+		}
+		if com.ATFilter[cmd] != nil {
+			com.ATFilter[cmd](&myBot)
 		}
 	}
 	return nil
