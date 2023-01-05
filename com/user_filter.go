@@ -11,7 +11,7 @@ import (
 func CreateUserFilter(bot *BotInfo) {
 	user := bot.CurrentUser
 	if len(bot.Content) == 0 {
-		bot.ReplayMsg("请在指令后加上创建人物到名称")
+		bot.ReplayMsg("请在指令后加上创建人物的名称")
 		return
 	}
 	if model.ExistUserName(bot.Content) {
@@ -29,11 +29,10 @@ func personalInfoFilter(botInfo *BotInfo) {
 	var user = botInfo.CurrentUser
 	detail := model.BuildUserDetail(user)
 	var info = []string{
-		user.UserName,
+		//user.UserName,
 		"体质: " + cast.ToString(user.TiZhi) + "\t" + "敏捷: " + cast.ToString(user.MinJie),
 		"灵根: " + detail.LingGenDesc,
 		"年龄: " + cast.ToString(detail.Age) + "\t" + "寿元: " + cast.ToString(detail.LeftAge),
 	}
-	// todo
-	botInfo.ReplyDirectEmbedMsg(util.BuildEmbed("个人信息", botInfo.Data.Author.Avatar, info))
+	botInfo.ReplyDirectEmbedMsg(util.BuildEmbed(user.UserName, botInfo.Data.Author.Avatar, info))
 }
