@@ -1,32 +1,39 @@
 package com
 
 import (
+	"GO_XIUXIAN_QQ_CHANNEL_BOT/model"
 	"GO_XIUXIAN_QQ_CHANNEL_BOT/util"
 	"fmt"
+	"github.com/spf13/cast"
 )
 
 // CreateUserFilter 创建新用户
 func CreateUserFilter(bot *BotInfo) {
 	user := bot.CurrentUser
-	if user.ExistName(botInfo.Content) {
+	if len(bot.Content) == 0 {
+		bot.ReplayMsg("请在指令后加上创建人物到名称")
+		return
+	}
+	if model.ExistUserName(bot.Content) {
 		bot.ReplayMsg("该角色名已存在，请更换角色名")
 		return
 	}
 	user.NewUser(bot.Content)
 	user.Save()
-	bot.ReplayMsg(fmt.Sprintf("拥有%s灵根的%s已经进入修仙界", user.LingGen, user.UserName))
+	detail := model.BuildUserDetail(user)
+	bot.ReplayMsg(fmt.Sprintf("拥有%s灵根的%s已经进入修仙界", detail.LingGenDesc, user.UserName))
 }
 
 // personalInfoFilter 展示个人信息
 func personalInfoFilter(botInfo *BotInfo) {
 	var user = botInfo.CurrentUser
-	user.UserInfo()
+	detail := model.BuildUserDetail(user)
 	var info = []string{
 		user.UserName,
-		string(user.TiZhi),
-		string(user.MinJie),
-		user.LingGen,
+		"体质: " + cast.ToString(user.TiZhi) + "\t" + "敏捷: " + cast.ToString(user.MinJie),
+		"灵根: " + detail.LingGenDesc,
+		"年龄: " + cast.ToString(detail.Age) + "\t" + "寿元: " + cast.ToString(detail.LeftAge),
 	}
 	// todo
-	botInfo.ReplayEmbedMsg(util.BuildEmbed("个人信息", botInfo.Data.Author.Avatar, info))
+	botInfo.ReplyDirectEmbedMsg(util.BuildEmbed("个人信息", botInfo.Data.Author.Avatar, info))
 }

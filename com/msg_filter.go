@@ -11,6 +11,7 @@ var (
 func init() {
 	ATFilter["/test"] = testFilter
 	ATFilter["个人信息"] = personalInfoFilter
+	DirectFilter["/个人信息"] = personalInfoFilter
 }
 
 func testFilter(botInfo *BotInfo) {

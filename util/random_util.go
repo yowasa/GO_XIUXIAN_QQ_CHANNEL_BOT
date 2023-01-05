@@ -40,3 +40,8 @@ func RandomDistribution(total int, num int) []uint {
 	}
 	return moneyList
 }
+
+// IntReflect 映射数据 把x从 in_min到in_max到数据范围映射到out_min到out_max区间内
+func IntReflect(x int, in_min int, in_max int, out_min int, out_max int) int {
+	return (x-in_min)*(out_max-out_min)/(in_max-in_min) + out_min
+}

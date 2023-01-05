@@ -42,7 +42,7 @@ func GetAtList(str string) []string {
 	return result
 }
 
-// GetFirstAt 获取at的用户列表
+// GetFirstAt 获取除了at机器人之后第一个at的用户
 func GetFirstAt(str string) string {
 	atList := GetAtList(str)
 	if atList == nil {
