@@ -98,7 +98,7 @@ type UserDetail struct {
 	Age int
 	//剩余寿元
 	LeftAge    int
-	BattleInfo UserBattleInfo
+	BattleInfo *UserBattleInfo
 }
 
 type UserBattleInfo struct {
@@ -128,7 +128,7 @@ func BuildUserBattleInfo(user *User) *UserBattleInfo {
 
 }
 
-// 构建用户详情
+// BuildUserDetail 构建用户详情
 func BuildUserDetail(user *User) *UserDetail {
 	var detail UserDetail
 	detail.User = user

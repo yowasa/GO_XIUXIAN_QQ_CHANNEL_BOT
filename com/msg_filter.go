@@ -12,6 +12,7 @@ func init() {
 	ATFilter["/test"] = testFilter
 	ATFilter["个人信息"] = personalInfoFilter
 	DirectFilter["/个人信息"] = personalInfoFilter
+	DirectFilter["/战斗"] = battleFilter
 }
 
 func testFilter(botInfo *BotInfo) {
