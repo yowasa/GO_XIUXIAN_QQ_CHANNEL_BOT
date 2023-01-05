@@ -87,7 +87,7 @@ func (u *User) Save() {
 	db.Save(&u)
 }
 
-// User详情
+// UserDetail User详情
 type UserDetail struct {
 	User *User
 	//灵根map
@@ -97,9 +97,38 @@ type UserDetail struct {
 	//年龄
 	Age int
 	//剩余寿元
-	LeftAge int
+	LeftAge    int
+	BattleInfo UserBattleInfo
 }
 
+type UserBattleInfo struct {
+	//血量
+	HP int
+	//灵力
+	MP int
+	//攻击力
+	ATK int
+	// 防御力
+	DEF int
+	// 速度
+	SPD int
+}
+
+// 构建用户战斗信息
+func BuildUserBattleInfo(user *User) *UserBattleInfo {
+	var info UserBattleInfo
+	//计算血量
+	info.HP = util.IntReflect(user.TiZhi, 0, 100, 80, 130)
+	//计算速度
+	info.SPD = util.IntReflect(user.MinJie, 0, 100, 70, 100)
+	info.MP = 0
+	info.ATK = 10
+	info.DEF = 0
+	return &info
+
+}
+
+// 构建用户详情
 func BuildUserDetail(user *User) *UserDetail {
 	var detail UserDetail
 	detail.User = user
