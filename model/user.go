@@ -4,27 +4,31 @@ import (
 	"GO_XIUXIAN_QQ_CHANNEL_BOT/util"
 	"encoding/json"
 	"fmt"
+	"gorm.io/gorm"
 	"log"
 	"os"
 	"sort"
+	"strings"
 	"time"
 )
 
+type UserBase struct {
+}
+
 // 数据库User
 type User struct {
-	Id        int64 `gorm:"primary_key" json:"id"`
-	UserId    string
-	UserName  string
-	TiZhi     int    // 体质
-	MinJie    int    // 敏捷
-	LingGen   string // 灵根
-	BaseInfo  string
-	Dead      bool       // 死亡  true为死亡状态 默认为false
-	CreatedAt *time.Time //创建时间 自动更新不用过问
-	StartAT   *time.Time //本次游戏开始时间
-	UpdatedAt *time.Time //更新时间 自动更新不用过问
-	DeadAt    *time.Time //死亡时间
-	Life      int        //寿元
+	gorm.Model
+	UserId   string
+	UserName string
+	TiZhi    int    // 体质
+	MinJie   int    // 敏捷
+	LingGen  string // 灵根
+	Feature  string
+	BaseInfo UserBase   `gorm:"embedded;embeddedPrefix:base_"`
+	Dead     bool       // 死亡  true为死亡状态 默认为false
+	StartAT  *time.Time //本次游戏开始时间
+	DeadAt   *time.Time //死亡时间
+	Life     int        //寿元
 }
 
 var lingGenList = []string{"金", "木", "水", "火", "土"}
@@ -33,6 +37,11 @@ var lingGenList = []string{"金", "木", "水", "火", "土"}
 func (u *User) NewUser(name string) {
 	u.UserName = name
 	setBaseInfo(u) // 设置基础属性值
+	detail := BuildUserDetail(u)
+	for _, i := range strings.Split(u.Feature, ",") {
+		ExecCreateFeature(i, detail)
+	}
+
 }
 func setBaseInfo(user *User) {
 	user.TiZhi = util.RandomRange(20, 101) // 体质
@@ -41,6 +50,7 @@ func setBaseInfo(user *User) {
 	now := time.Now()
 	user.StartAT = &now                  //开始时间
 	user.Life = util.RandomRange(50, 81) //寿元
+	user.Feature = "身强体壮"
 }
 
 // GenLingGen 生成灵根
@@ -60,7 +70,7 @@ func GenLingGen() string {
 
 func (u *User) Exist() bool {
 	db.Where("user_id = ? and dead = false", u.UserId).First(u)
-	if u.Id == 0 {
+	if u.ID == 0 {
 		return false
 	}
 	return true
@@ -77,7 +87,7 @@ func (u *User) UserInfo() {
 func ExistUserName(name string) bool {
 	var user User
 	db.Where("user_name = ? and dead != true", name).First(&user)
-	if user.Id == 0 {
+	if user.ID == 0 {
 		return false
 	}
 	return true
@@ -141,6 +151,10 @@ func BuildUserDetail(user *User) *UserDetail {
 	detail.LingGenDesc = GetLingGenDesc(lingGenMap)
 	detail.Age = user.GetAge()
 	detail.LeftAge = user.GetAgeLeft()
+	detail.BattleInfo = BuildUserBattleInfo(user)
+	for _, i := range strings.Split(user.Feature, ",") {
+		ExecCalAttFeature(i, &detail)
+	}
 	return &detail
 }
 
