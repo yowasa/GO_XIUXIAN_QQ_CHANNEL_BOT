@@ -59,7 +59,8 @@ func atMessageEventHandler(event *dto.WSPayload, data *dto.WSATMessageData) erro
 	log.Println("cmd = " + res.Cmd + " content = " + res.Content)
 	cmd := res.Cmd         ///对于像 /私信天气 城市名 指令，cmd 为 私信天气
 	content := res.Content //content 为 城市名
-	atList := util.GetAtList(data.Content)
+	//atList := util.GetAtList(data.Content)
+	atList := util.GetAtList1(data.Mentions)
 	var user model.User
 	user.UserId = data.Author.ID
 	myData := dto.Message(*data)
@@ -104,7 +105,8 @@ func main() {
 	}
 
 	registerMsgPush()
-
+	// 初始化所有的子频道及用户组到常量map中
+	initChannel()
 	var atMessage event.ATMessageEventHandler = atMessageEventHandler
 	var directMessage event.DirectMessageEventHandler = directMessageEventHandler
 
@@ -127,4 +129,38 @@ func registerMsgPush() {
 	//这里表示每天15:53分发送消息
 	timer.AddFunc("0 53 15 * * ?", activeMsgPush)
 	timer.Start()
+}
+
+func initChannel() {
+
+	channels, err := api.Channels(ctx, config.GuildId)
+	if err != nil {
+		log.Fatalln("get channel list error， err = ", err)
+		os.Exit(1)
+	}
+	roles, err := api.Roles(ctx, config.GuildId)
+	if err != nil {
+		log.Fatalln("get role list error， err = ", err)
+		os.Exit(1)
+	}
+	model.Roles = make(map[string]model.Role, len(channels))
+	for i := 0; i < len(roles.Roles); i++ {
+		var name = roles.Roles[i].Name
+		var role = model.Role{
+			RoleId:   string(roles.Roles[i].ID),
+			RoleName: roles.Roles[i].Name,
+		}
+		model.Roles[name] = role
+	}
+	model.Channels = make(map[string]model.Channel, len(channels))
+	for i := 0; i < len(channels); i++ {
+		var name = channels[i].Name
+		model.Channels[name] = model.Channel{
+			ChannelId:       channels[i].ID,
+			ChannelName:     channels[i].Name,
+			ParentChannelId: channels[i].ParentID,
+			RoleId:          model.Roles[name].RoleId,
+		}
+	}
+
 }

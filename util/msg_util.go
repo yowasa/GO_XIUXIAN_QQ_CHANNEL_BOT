@@ -42,6 +42,15 @@ func GetAtList(str string) []string {
 	return result
 }
 
+// GetAtList1 获取除了at机器人之后at的用户
+func GetAtList1(users []*dto.User) []string {
+	var atList []string
+	for i := 1; i < len(users); i++ {
+		atList = append(atList, users[i].ID)
+	}
+	return atList
+}
+
 // GetFirstAt 获取除了at机器人之后第一个at的用户
 func GetFirstAt(str string) string {
 	atList := GetAtList(str)

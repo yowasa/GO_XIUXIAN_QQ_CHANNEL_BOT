@@ -30,6 +30,7 @@ type User struct {
 	StartAT  *time.Time //本次游戏开始时间
 	DeadAt   *time.Time //死亡时间
 	Life     int        //寿元
+	Location string     // 当前位置 子频道名称
 }
 
 var lingGenList = []string{"金", "木", "水", "火", "土"}
@@ -42,7 +43,7 @@ func (u *User) NewUser(name string) {
 	for _, i := range strings.Split(u.Feature, ",") {
 		ExecCreateFeature(i, detail)
 	}
-
+	u.Location = "新手村"
 }
 func setBaseInfo(user *User) {
 	user.TiZhi = util.RandomRange(20, 101) // 体质

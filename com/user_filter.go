@@ -33,6 +33,7 @@ func personalInfoFilter(botInfo *BotInfo) {
 		"体质: " + cast.ToString(user.TiZhi) + "\t" + "敏捷: " + cast.ToString(user.MinJie),
 		"灵根: " + detail.LingGenDesc,
 		"年龄: " + cast.ToString(detail.Age) + "\t" + "寿元: " + cast.ToString(detail.LeftAge),
+		"位置: " + cast.ToString(user.Location),
 		fmt.Sprintf("特性: %s", detail.User.Feature),
 		fmt.Sprintf("HP: %d\tMP: %d\tSPD: %d\t", detail.BattleInfo.HP, detail.BattleInfo.MP, detail.BattleInfo.SPD),
 		fmt.Sprintf("ATK:%d\tDEF:%d\t", detail.BattleInfo.ATK, detail.BattleInfo.DEF),
