@@ -62,13 +62,13 @@ func execLua(user *UserDetail, luaPath string, method string) {
 		Protect: true,                // 如果出现异常，是panic还是返回err
 	}, lua.LString(uJson)) // 传递输入参数n=1
 	if err != nil {
-		panic(err)
+		return
 	}
 	// 获取返回结果
 	ret := l.Get(-1)
 	// 从堆栈中删除返回值
 	l.Pop(1)
-
+	//var newUser UserDetail
 	err = json.Unmarshal([]byte(fmt.Sprint(ret)), &u)
 	user = &u
 }

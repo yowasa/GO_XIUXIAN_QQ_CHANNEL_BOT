@@ -8,14 +8,14 @@ function inCreate(u)
     then
         t["User"]["TiZhi"]=math.random(80,100)
     end
-    str_json = json.encode(u)
+    str_json = json.encode(t)
     return str_json
 end
 
 --计算属性时 血量*1.1倍
 function inCalAttr(u)
     t = json.decode(u)
-    t["User"]["BattleInfo"]["HP"]=t["User"]["BattleInfo"]["HP"]*1.1
-    str_json = json.encode(u)
+    t["BattleInfo"]["HP"]=math.ceil(t["BattleInfo"]["HP"]*1.1)
+    str_json = json.encode(t)
     return str_json
 end

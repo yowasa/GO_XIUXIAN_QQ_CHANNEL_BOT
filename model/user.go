@@ -50,7 +50,7 @@ func setBaseInfo(user *User) {
 	now := time.Now()
 	user.StartAT = &now                  //开始时间
 	user.Life = util.RandomRange(50, 81) //寿元
-	user.Feature = "身强体壮"
+	user.Feature = "三十年河西"
 }
 
 // GenLingGen 生成灵根
