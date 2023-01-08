@@ -1,6 +1,7 @@
 package model
 
 import (
+	"GO_XIUXIAN_QQ_CHANNEL_BOT/cfg"
 	"GO_XIUXIAN_QQ_CHANNEL_BOT/util"
 	"encoding/json"
 	"fmt"
@@ -50,7 +51,11 @@ func setBaseInfo(user *User) {
 	now := time.Now()
 	user.StartAT = &now                  //开始时间
 	user.Life = util.RandomRange(50, 81) //寿元
-	user.Feature = "三十年河西"
+
+	//随机选取一个特性
+	index := util.RandomN(len(cfg.PathFeatureLua))
+	keys := util.GetKeys(cfg.PathFeatureLua)
+	user.Feature = keys[index]
 }
 
 // GenLingGen 生成灵根

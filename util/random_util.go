@@ -14,6 +14,10 @@ func RandomRange(min int, max int) int {
 	return randomSeed.Intn(max-min) + min
 }
 
+func RandomN(n int) int {
+	return randomSeed.Intn(n)
+}
+
 // RandomDistribution 随机分城多少份 整数
 func RandomDistribution(total int, num int) []uint {
 	leftMoney, leftNum := total, num
