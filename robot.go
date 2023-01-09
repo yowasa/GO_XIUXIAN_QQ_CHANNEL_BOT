@@ -59,8 +59,7 @@ func atMessageEventHandler(event *dto.WSPayload, data *dto.WSATMessageData) erro
 	log.Println("cmd = " + res.Cmd + " content = " + res.Content)
 	cmd := res.Cmd         ///对于像 /私信天气 城市名 指令，cmd 为 私信天气
 	content := res.Content //content 为 城市名
-	//atList := util.GetAtList(data.Content)
-	atList := util.GetAtList1(data.Mentions)
+	atList := util.GetAtList(data.Mentions)
 	var user model.User
 	user.UserId = data.Author.ID
 	myData := dto.Message(*data)

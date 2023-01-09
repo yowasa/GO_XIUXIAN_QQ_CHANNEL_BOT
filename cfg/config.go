@@ -16,6 +16,7 @@ type Config struct {
 	GuildId       string `yaml:"guildId"`       //频道id
 	TestChannelId string `yaml:"testChannelId"` //测试自频道id
 	Mysql         string `yaml:"mysql"`         //mysql数据库链接dsn
+	BotId         string `yaml:"botId"`
 }
 
 // 全局配置
