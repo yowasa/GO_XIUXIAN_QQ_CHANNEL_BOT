@@ -8,6 +8,7 @@ import (
 
 // battleFilter 展示个人信息
 func battleFilter(botInfo *BotInfo) {
+	//todo @fei 不一定非要at对方 也可以直接输入对方名称 还有私聊时无法at 建议不要私聊对战 后续开暗杀才能私聊使用
 	user := botInfo.CurrentUser
 	atUserId := botInfo.AtUserList[0]
 	var B = model.User{

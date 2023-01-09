@@ -14,6 +14,11 @@ import (
 )
 
 type UserBase struct {
+	NowHP           int        //当前血量
+	NowMP           int        //当前蓝量
+	NowExp          int        //当前经验
+	status          int        //当前状态 0-空闲 1-修炼中 2-养伤中
+	statusStartTime *time.Time //状态开始时间
 }
 
 // 数据库User
@@ -21,10 +26,12 @@ type User struct {
 	gorm.Model
 	UserId   string
 	UserName string
-	TiZhi    int    // 体质
-	MinJie   int    // 敏捷
-	LingGen  string // 灵根
-	Feature  string
+	TiZhi    int        // 体质
+	MinJie   int        // 敏捷
+	LingGen  string     // 灵根
+	Feature  string     //特质
+	stage    string     //境界
+	level    string     //等级
 	BaseInfo UserBase   `gorm:"embedded;embeddedPrefix:base_"`
 	Dead     bool       // 死亡  true为死亡状态 默认为false
 	StartAT  *time.Time //本次游戏开始时间

@@ -1,46 +1,341 @@
 {
-  "凡人":{
-    "radio": 100,
-    "exp": 50
+  "凡人": {
+    "num": 100,
+    "exp": 200,
+    "level": [
+      {
+        "num": 1,
+        "radio_min": 100,
+        "radio_max": 120,
+        "name": "锻体期"
+      },
+      {
+        "num": 2,
+        "radio_min": 150,
+        "radio_max": 170,
+        "name": "引灵期"
+      }
+    ]
   },
-  "练气":{
-    "radio": 150,
-    "exp": 1000
+  "练气": {
+    "num": 200,
+    "exp": 1000,
+    "level": [
+      {
+        "num": 1,
+        "radio_min": 300,
+        "radio_max": 350,
+        "name": "一层"
+      },
+      {
+        "num": 2,
+        "radio_min": 400,
+        "radio_max": 450,
+        "name": "二层"
+      },
+      {
+        "num": 3,
+        "radio_min": 500,
+        "radio_max": 550,
+        "name": "三层"
+      },
+      {
+        "num": 4,
+        "radio_min": 600,
+        "radio_max": 650,
+        "name": "四层"
+      },
+      {
+        "num": 5,
+        "radio_min": 700,
+        "radio_max": 750,
+        "name": "五层"
+      },
+      {
+        "num": 6,
+        "radio_min": 800,
+        "radio_max": 850,
+        "name": "六层",
+        "radio": 100
+      },
+      {
+        "num": 7,
+        "radio_min": 900,
+        "radio_max": 950,
+        "name": "七层",
+        "radio": 100
+      },
+      {
+        "num": 8,
+        "radio_min": 1000,
+        "radio_max": 1050,
+        "name": "八层",
+        "radio": 100
+      },
+      {
+        "num": 9,
+        "radio_min": 1100,
+        "radio_max": 1150,
+        "name": "九层",
+        "radio": 100
+      },
+      {
+        "num": 10,
+        "radio_min": 1200,
+        "radio_max": 1300,
+        "name": "巅峰",
+        "radio": 100
+      }
+    ]
   },
-  "筑基":{
-    "radio": 200,
-    "exp": 3000
+  "筑基": {
+    "num": 300,
+    "exp": 3000,
+    "level": [
+      {
+        "num": 1,
+        "radio_min": 1500,
+        "radio_max": 1600,
+        "name": "初期"
+      },
+      {
+        "num": 2,
+        "radio_min": 1800,
+        "radio_max": 1900,
+        "name": "中期"
+      },
+      {
+        "num": 3,
+        "radio_min": 2100,
+        "radio_max": 2200,
+        "name": "后期"
+      },
+      {
+        "num": 4,
+        "radio_min": 2400,
+        "radio_max": 2600,
+        "name": "巅峰"
+      }
+    ]
   },
-  "结丹":{
-    "radio": 250,
-    "exp": 5000
+  "结丹": {
+    "num": 400,
+    "exp": 5000,
+    "level": [
+      {
+        "num": 1,
+        "radio_min": 3500,
+        "radio_max": 3700,
+        "name": "初期"
+      },
+      {
+        "num": 2,
+        "radio_min": 4100,
+        "radio_max": 4300,
+        "name": "中期"
+      },
+      {
+        "num": 3,
+        "radio_min": 4700,
+        "radio_max": 4900,
+        "name": "后期"
+      },
+      {
+        "num": 4,
+        "radio_min": 5300,
+        "radio_max": 5500,
+        "name": "巅峰"
+      }
+    ]
   },
-  "金丹":{
-    "radio": 500,
-    "exp": 10000
+  "金丹": {
+    "num": 500,
+    "exp": 10000,
+    "level": [
+      {
+        "num": 1,
+        "radio_min": 7000,
+        "radio_max": 7300,
+        "name": "初期"
+      },
+      {
+        "num": 2,
+        "radio_min": 8000,
+        "radio_max": 8300,
+        "name": "中期"
+      },
+      {
+        "num": 3,
+        "radio_min": 9000,
+        "radio_max": 9300,
+        "name": "后期"
+      },
+      {
+        "num": 4,
+        "radio_min": 10000,
+        "radio_max": 11000,
+        "name": "巅峰"
+      }
+    ]
   },
-  "元婴":{
-    "radio": 600,
-    "exp": 50000
+  "元婴": {
+    "num": 600,
+    "exp": 50000,
+    "level": [
+      {
+        "num": 1,
+        "radio_min": 15000,
+        "radio_max": 16000,
+        "name": "初期"
+      },
+      {
+        "num": 2,
+        "radio_min": 18000,
+        "radio_max": 19000,
+        "name": "中期"
+      },
+      {
+        "num": 3,
+        "radio_min": 21000,
+        "radio_max": 22000,
+        "name": "后期"
+      },
+      {
+        "num": 4,
+        "radio_min": 24000,
+        "radio_max": 26000,
+        "name": "巅峰"
+      }
+    ]
   },
-  "化神":{
-    "radio": 800,
-    "exp": 200000
+  "化神": {
+    "num": 700,
+    "exp": 200000,
+    "level": [
+      {
+        "num": 1,
+        "radio_min": 35000,
+        "radio_max": 37000,
+        "name": "初期"
+      },
+      {
+        "num": 2,
+        "radio_min": 40000,
+        "radio_max": 42000,
+        "name": "中期"
+      },
+      {
+        "num": 3,
+        "radio_min": 45000,
+        "radio_max": 47000,
+        "name": "后期"
+      },
+      {
+        "num": 4,
+        "radio_min": 50000,
+        "radio_max": 55000,
+        "name": "巅峰"
+      }
+    ]
   },
-  "洞虚":{
-    "radio": 900,
-    "exp": 500000
+  "洞虚": {
+    "num": 800,
+    "exp": 500000,
+    "level": [
+      {
+        "num": 1,
+        "radio_min": 70000,
+        "radio_max": 75000,
+        "name": "初期"
+      },
+      {
+        "num": 2,
+        "radio_min": 85000,
+        "radio_max": 90000,
+        "name": "中期"
+      },
+      {
+        "num": 3,
+        "radio_min": 100000,
+        "radio_max": 105000,
+        "name": "后期"
+      },
+      {
+        "num": 4,
+        "radio_min": 115000,
+        "radio_max": 130000,
+        "name": "巅峰"
+      }
+    ]
   },
-  "大成":{
-    "radio": 1000,
-    "exp": 1000000
+  "大乘": {
+    "num": 900,
+    "exp": 1000000,
+    "level": [
+      {
+        "num": 1,
+        "radio_min": 170000,
+        "radio_max": 180000,
+        "name": "初期"
+      },
+      {
+        "num": 2,
+        "radio_min": 200000,
+        "radio_max": 210000,
+        "name": "中期"
+      },
+      {
+        "num": 3,
+        "radio_min": 230000,
+        "radio_max": 240000,
+        "name": "后期"
+      },
+      {
+        "num": 4,
+        "radio_min": 260000,
+        "radio_max": 280000,
+        "name": "巅峰"
+      }
+    ]
   },
-  "渡劫":{
+  "渡劫": {
+    "num": 1000,
+    "exp": 1500000,
+    "level": [
+      {
+        "num": 1,
+        "radio_min": 330000,
+        "radio_max": 350000,
+        "name": "初期"
+      },
+      {
+        "num": 2,
+        "radio_min": 380000,
+        "radio_max": 400000,
+        "name": "中期"
+      },
+      {
+        "num": 3,
+        "radio_min": 430000,
+        "radio_max": 450000,
+        "name": "后期"
+      },
+      {
+        "num": 4,
+        "radio_min": 480000,
+        "radio_max": 520000,
+        "name": "巅峰"
+      }
+    ]
+  },
+  "登仙": {
     "radio": 1100,
-    "exp": 1500000
-  },
-  "登仙":{
-    "radio": 1200,
-    "exp": 2000000
+    "exp": -1,
+    "level": [
+      {
+        "name": "飞升期",
+        "radio": 600000
+      }
+    ]
   }
 }
