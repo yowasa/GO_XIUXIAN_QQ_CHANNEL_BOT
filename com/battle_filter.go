@@ -15,7 +15,7 @@ func battleFilter(botInfo *BotInfo) {
 		UserId: atUserId,
 	}
 	if !B.Exist() {
-		botInfo.ReplayMsg("对手尚未开始修仙")
+		botInfo.ReplyMsg("对手尚未开始修仙")
 	}
 	var msg = battle.Battle(user, &B)
 	botInfo.ReplyDirectEmbedMsg(util.BuildEmbed("战斗概况", botInfo.Data.Author.Avatar, msg))

@@ -9,12 +9,12 @@ import (
 func moveFilter(bot *BotInfo) {
 	var destination = bot.Content
 	if len(destination) == 0 {
-		bot.ReplayMsg("请在指令后输入要移动到的目的地")
+		bot.ReplyMsg("请在指令后输入要移动到的目的地")
 		return
 	}
 	channel := model.Channels[destination]
 	if channel == (model.Channel{}) {
-		bot.ReplayMsg("所输入的目的地不存在，请输入正确的目的地")
+		bot.ReplyMsg("所输入的目的地不存在，请输入正确的目的地")
 		return
 	}
 	user := bot.CurrentUser
@@ -22,7 +22,7 @@ func moveFilter(bot *BotInfo) {
 
 	moveToChannel(bot, channel.RoleId, user, destination)
 	// todo 速度时间计算
-	bot.ReplayMsg("你已移动到:" + destination)
+	bot.ReplyMsg("你已移动到:" + destination)
 }
 
 func moveToChannel(bot *BotInfo, roleId string, user *model.User, destination string) {

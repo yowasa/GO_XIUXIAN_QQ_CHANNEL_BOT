@@ -27,18 +27,18 @@ type BotInfo struct {
 	AtUserList []string
 }
 
-// ReplayMsg 回复子频道发送信息(引用回复)
-func (bot *BotInfo) ReplayMsg(msg string) {
+// ReplyMsg 回复子频道发送信息(引用回复)
+func (bot *BotInfo) ReplyMsg(msg string) {
 	bot.Api.PostMessage(bot.Ctx, bot.Data.ChannelID, &dto.MessageToCreate{MsgID: bot.Data.ID, Content: msg, MessageReference: &dto.MessageReference{MessageID: bot.Data.ID}})
 }
 
-// ReplayEmbedMsg 回复子频道发送信息(引用回复)
-func (bot *BotInfo) ReplayEmbedMsg(msg *dto.Embed) {
+// ReplyEmbedMsg 回复子频道发送信息(引用回复)
+func (bot *BotInfo) ReplyEmbedMsg(msg *dto.Embed) {
 	bot.Api.PostMessage(bot.Ctx, bot.Data.ChannelID, &dto.MessageToCreate{MsgID: bot.Data.ID, Embed: msg})
 }
 
-// ReplayMsgNotRef 回复子频道发送信息(不引用回复)
-func (bot *BotInfo) ReplayMsgNotRef(msg string) {
+// ReplyMsgNotRef 回复子频道发送信息(不引用回复)
+func (bot *BotInfo) ReplyMsgNotRef(msg string) {
 	bot.Api.PostMessage(bot.Ctx, bot.Data.ChannelID, &dto.MessageToCreate{MsgID: bot.Data.ID, Content: msg})
 }
 

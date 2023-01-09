@@ -42,7 +42,7 @@ func directMessageEventHandler(event *dto.WSPayload, data *dto.WSDirectMessageDa
 		CurrentUser: &user,
 	}
 	if !user.Exist() {
-		myBot.ReplayMsg("请先创建角色再执行指令！")
+		myBot.ReplyMsg("请先创建角色再执行指令！")
 		return nil
 	}
 	if com.DirectFilter[cmd] != nil {
@@ -78,7 +78,7 @@ func atMessageEventHandler(event *dto.WSPayload, data *dto.WSATMessageData) erro
 			com.CreateUserFilter(&myBot)
 			return nil
 		}
-		myBot.ReplayMsg("请先创建角色再执行指令！")
+		myBot.ReplyMsg("请先创建角色再执行指令！")
 		return nil
 	}
 	if com.ATFilter[cmd] != nil {

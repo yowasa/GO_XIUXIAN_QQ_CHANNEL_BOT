@@ -17,8 +17,8 @@ type UserBase struct {
 	NowHP           int        //当前血量
 	NowMP           int        //当前蓝量
 	NowExp          int        //当前经验
-	status          int        //当前状态 0-空闲 1-修炼中 2-养伤中
-	statusStartTime *time.Time //状态开始时间
+	Status          int        //当前状态 0-空闲 1-修炼中 2-濒死
+	StatusStartTime *time.Time //状态开始时间
 }
 
 // 数据库User
@@ -30,8 +30,8 @@ type User struct {
 	MinJie   int        // 敏捷
 	LingGen  string     // 灵根
 	Feature  string     //特质
-	stage    string     //境界
-	level    string     //等级
+	Stage    int        //境界
+	Level    int        //等级
 	BaseInfo UserBase   `gorm:"embedded;embeddedPrefix:base_"`
 	Dead     bool       // 死亡  true为死亡状态 默认为false
 	StartAT  *time.Time //本次游戏开始时间
@@ -50,6 +50,8 @@ func (u *User) NewUser(name string) {
 	for _, i := range strings.Split(u.Feature, ",") {
 		ExecCreateFeature(i, detail)
 	}
+	detail = BuildUserDetail(u)
+	u.BaseInfo.NowHP = detail.BattleInfo.HP
 	u.Location = "新手村"
 }
 func setBaseInfo(user *User) {
@@ -59,7 +61,8 @@ func setBaseInfo(user *User) {
 	now := time.Now()
 	user.StartAT = &now                  //开始时间
 	user.Life = util.RandomRange(50, 81) //寿元
-
+	user.Stage = 100                     //境界
+	user.Level = 1                       //级别
 	//随机选取一个特性
 	index := util.RandomN(len(cfg.PathFeatureLua))
 	keys := util.GetKeys(cfg.PathFeatureLua)
@@ -140,12 +143,15 @@ type UserBattleInfo struct {
 // 构建用户战斗信息
 func BuildUserBattleInfo(user *User) *UserBattleInfo {
 	var info UserBattleInfo
+	radio := user.GetLevelRadio()
 	//计算血量
-	info.HP = util.IntReflect(user.TiZhi, 0, 100, 80, 130)
+	HPRate := util.IntReflect(user.TiZhi, 0, 100, 80, 130)
+	info.HP = radio * HPRate / 100
 	//计算速度
-	info.SPD = util.IntReflect(user.MinJie, 0, 100, 70, 100)
+	SPDRate := util.IntReflect(user.MinJie, 0, 100, 70, 100)
+	info.SPD = radio * SPDRate / 100
 	info.MP = 0
-	info.ATK = 10
+	info.ATK = 10 * radio / 100
 	info.DEF = 0
 	return &info
 
@@ -217,4 +223,59 @@ func (u *User) GetDeadTime() time.Time {
 	start := *u.StartAT
 	t := start.Add(d)
 	return t
+}
+
+// 检查是否空闲
+func (u *User) CheckFree() bool {
+	return u.BaseInfo.Status == 0
+}
+
+// 获取状态描述
+func (u *User) GetStatusMsg() string {
+	switch u.BaseInfo.Status {
+	case 1:
+		return fmt.Sprintf("%s正在修炼中 无法进行其他行动", u.UserName)
+	case 2:
+		return fmt.Sprintf("%s正处于濒死状态 无法进行其他行动", u.UserName)
+	}
+	return ""
+}
+
+// GetExpMsg 获取当前经验描述
+func (u *User) GetExpMsg() string {
+	stage := cfg.UserLevel[int(u.Stage/100)-1]
+	needExp := stage.Exp
+	radio := int(u.BaseInfo.NowExp * 100 / needExp)
+	if radio > 100 {
+		return "你感觉已经达到了当前境界的瓶颈,是时候寻求突破了"
+	}
+	if radio > 80 {
+		return "你感觉即将达到当前境界的瓶颈"
+	}
+	if radio > 50 {
+		return "你感觉当前境界已经逐渐稳固"
+	}
+	if radio < 20 {
+		return "你感觉你还没有完全适应当前的境界"
+	} else {
+		return "你感觉自己已经适应了当前的境界"
+	}
+}
+
+func (u *User) GetLevelRadio() int {
+	stage := cfg.UserLevel[int(u.Stage/100)-1]
+	needExp := stage.Exp
+	level := stage.Level[u.Level-1]
+	x := u.BaseInfo.NowExp
+	if x > needExp {
+		x = needExp
+	}
+	return util.IntReflect(x, 0, needExp, level.RadioMin, level.RadioMax)
+
+}
+func (u *User) GetLevelDesc() string {
+	stage := cfg.UserLevel[int(u.Stage/100)-1]
+	level := stage.Level[u.Level-1]
+	return fmt.Sprintf("%s%s", stage.Name, level.Name)
+
 }

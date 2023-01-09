@@ -23,13 +23,21 @@ type Config struct {
 var config Config
 
 // Level 境界配置
+type Stage struct {
+	Num   int     `json:"num""`
+	Name  string  `json:"name""`
+	Exp   int     `json:"exp"`
+	Level []Level `json:"level"`
+}
 type Level struct {
-	Radio int `json:"radio""`
-	Exp   int `json:"exp"`
+	Num      int    `json:"num""`
+	Name     string `json:"name""`
+	RadioMin int    `json:"radio_min"`
+	RadioMax int    `json:"radio_max"`
 }
 
 // UserLevel 境界映射
-var UserLevel map[string]Level
+var UserLevel []Stage
 
 // PathFeatureLua 特征名-lua脚本位置映射
 var PathFeatureLua map[string]string

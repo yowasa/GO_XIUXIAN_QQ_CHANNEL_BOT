@@ -9,16 +9,23 @@ var (
 
 // 初始化 将指令与方法注册进去
 func init() {
+	ATFilter["个人信息"] = personalInfoFilter
+	DirectFilter["/个人信息"] = personalInfoFilter
+	ATFilter["开始修炼"] = getExpByPractice
+	ATFilter["停止修炼"] = stopGetExpByPractice
+	ATFilter["升级"] = levelUp
+	ATFilter["突破"] = stageUp
+
+	//====== done ========
+
 	ATFilter["私信"] = privateFilter
 	ATFilter["/test"] = testFilter
-	ATFilter["个人信息"] = personalInfoFilter
 	ATFilter["移动"] = moveFilter
 	ATFilter["战斗"] = battleFilter
 	// 创建者需要具有相应管理员权限
 	ATFilter["创建子频道"] = createChannelFilter
 	ATFilter["创建身份组"] = createRoleFilter
 
-	DirectFilter["/个人信息"] = personalInfoFilter
 	DirectFilter["/战斗"] = battleFilter
 	DirectFilter["/移动"] = moveFilter
 
@@ -26,7 +33,7 @@ func init() {
 }
 
 func testFilter(botInfo *BotInfo) {
-	botInfo.ReplayMsg("测试filter成功")
+	botInfo.ReplyMsg("测试filter成功")
 }
 
 func privateFilter(botInfo *BotInfo) {
