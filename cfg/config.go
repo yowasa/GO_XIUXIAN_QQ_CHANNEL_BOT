@@ -36,6 +36,13 @@ type Level struct {
 	RadioMax int    `json:"radio_max"`
 }
 
+type Map struct {
+	X float64 `json:"x""`
+	Y float64 `json:"y"`
+}
+
+var MapLocation map[string]Map
+
 // UserLevel 境界映射
 var UserLevel []Stage
 
@@ -67,6 +74,14 @@ func init() {
 	levelPath := "./cfg/file/json/level.json"
 	content, err = os.ReadFile(levelPath)
 	err = json.Unmarshal(content, &UserLevel)
+	if err != nil {
+		log.Println("解析配置文件出错， err = ", err)
+		os.Exit(1)
+	}
+
+	mapLocation := "./cfg/file/json/map.json"
+	content, err = os.ReadFile(mapLocation)
+	err = json.Unmarshal(content, &MapLocation)
 	if err != nil {
 		log.Println("解析配置文件出错， err = ", err)
 		os.Exit(1)

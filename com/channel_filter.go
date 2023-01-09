@@ -1,8 +1,12 @@
 package com
 
 import (
+	"GO_XIUXIAN_QQ_CHANNEL_BOT/cfg"
 	"GO_XIUXIAN_QQ_CHANNEL_BOT/model"
+	"fmt"
 	"github.com/tencent-connect/botgo/dto"
+	"math"
+	"time"
 )
 
 // moveFilter 移动
@@ -20,9 +24,16 @@ func moveFilter(bot *BotInfo) {
 	user := bot.CurrentUser
 	// todo 是否有权限可以去
 
-	moveToChannel(bot, channel.RoleId, user, destination)
-	// todo 速度时间计算
-	bot.ReplyMsg("你已移动到:" + destination)
+	info := model.BuildUserBattleInfo(user)
+	var needTime = moveTime(info.SPD, user.Location, destination)
+	bot.ReplyMsg("你开始移动中")
+	//todo 延迟执行
+	timer := time.AfterFunc(time.Minute*time.Duration(needTime), func() {
+		fmt.Println("测试")
+		moveToChannel(bot, channel.RoleId, user, destination)
+		bot.ReplyMsg("你已移动到:" + destination)
+	})
+	defer timer.Stop()
 }
 
 func moveToChannel(bot *BotInfo, roleId string, user *model.User, destination string) {
@@ -32,6 +43,7 @@ func moveToChannel(bot *BotInfo, roleId string, user *model.User, destination st
 	channel := model.Channels[user.Location]
 	bot.Api.MemberDeleteRole(bot.Ctx, bot.GuildID, dto.RoleID(channel.RoleId), user.UserId, nil)
 	user.Location = destination
+	user.Save()
 }
 
 func createChannelFilter(bot *BotInfo) {
@@ -48,4 +60,11 @@ func createRoleFilter(bot *BotInfo) {
 		Name: bot.Content,
 	}
 	bot.Api.PostRole(bot.Ctx, bot.GuildID, &role)
+}
+
+func moveTime(speed int, A string, B string) int {
+	locationA := cfg.MapLocation[A]
+	locationB := cfg.MapLocation[B]
+	var distance = math.Sqrt(math.Pow(math.Abs(locationA.X-locationB.X), 2) + math.Pow(math.Abs(locationA.Y-locationB.Y), 2))
+	return int(math.Ceil(distance / float64(speed)))
 }

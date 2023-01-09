@@ -18,6 +18,7 @@ type UserBase struct {
 	NowMP           int        //当前蓝量
 	NowExp          int        //当前经验
 	Status          int        //当前状态 0-空闲 1-修炼中 2-濒死
+	StatusAction    string     //当前行动
 	StatusStartTime *time.Time //状态开始时间
 }
 
@@ -230,7 +231,7 @@ func (u *User) CheckFree() bool {
 	return u.BaseInfo.Status == 0
 }
 
-// 获取状态描述
+// GetStatusMsg 获取状态描述
 func (u *User) GetStatusMsg() string {
 	switch u.BaseInfo.Status {
 	case 1:
