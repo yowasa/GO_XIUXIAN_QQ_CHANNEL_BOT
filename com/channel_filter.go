@@ -3,7 +3,7 @@ package com
 import (
 	"GO_XIUXIAN_QQ_CHANNEL_BOT/cfg"
 	"GO_XIUXIAN_QQ_CHANNEL_BOT/model"
-	"fmt"
+	"github.com/spf13/cast"
 	"github.com/tencent-connect/botgo/dto"
 	"math"
 	"time"
@@ -26,14 +26,13 @@ func moveFilter(bot *BotInfo) {
 
 	info := model.BuildUserBattleInfo(user)
 	var needTime = moveTime(info.SPD, user.Location, destination)
-	bot.ReplyMsg("你开始移动中")
-	//todo 延迟执行
-	timer := time.AfterFunc(time.Minute*time.Duration(needTime), func() {
-		fmt.Println("测试")
-		moveToChannel(bot, channel.RoleId, user, destination)
-		bot.ReplyMsg("你已移动到:" + destination)
-	})
-	defer timer.Stop()
+	bot.ReplyMsg("你开始移动中,大约需要时间" + cast.ToString(needTime) + "分钟")
+	timer := time.After(time.Minute * time.Duration(needTime))
+	<-timer
+	moveToChannel(bot, channel.RoleId, user, destination)
+	// todo 能否优化为在移动后的频道 @通知 成功的消息
+	bot.Data.ChannelID = channel.ChannelId
+	//bot.ReplyMsgNotRef("你已移动到:" + destination)
 }
 
 func moveToChannel(bot *BotInfo, roleId string, user *model.User, destination string) {
