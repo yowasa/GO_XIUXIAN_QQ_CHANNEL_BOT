@@ -31,6 +31,8 @@ func init() {
 	fmt.Println(myDb)
 	myDb.AutoMigrate(
 		User{},
+		UserItem{},
+		UserFlag{},
 	)
 	db = myDb
 

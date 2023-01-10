@@ -1,5 +1,11 @@
 package com
 
+import (
+	"GO_XIUXIAN_QQ_CHANNEL_BOT/item"
+	"GO_XIUXIAN_QQ_CHANNEL_BOT/util"
+	"fmt"
+)
+
 var (
 	// ATFilter 过滤at信息
 	ATFilter = make(map[string]func(bot *BotInfo))
@@ -17,8 +23,6 @@ func init() {
 	ATFilter["突破"] = stageUp
 
 	//====== done ========
-
-	ATFilter["私信"] = privateFilter
 	ATFilter["/test"] = testFilter
 	ATFilter["移动"] = moveFilter
 	ATFilter["战斗"] = battleFilter
@@ -33,9 +37,10 @@ func init() {
 }
 
 func testFilter(botInfo *BotInfo) {
-	botInfo.ReplyMsg("测试filter成功")
-}
-
-func privateFilter(botInfo *BotInfo) {
-	botInfo.ReplyDirectMsg("你好，欢迎来到修仙世界")
+	util.RandomN(3)
+	pinzhi := []string{"凡品", "良品", "极品"}
+	p := pinzhi[util.RandomN(3)]
+	i := item.ItemNameMap["培元丹"]
+	item.AddPill(botInfo.CurrentUser.ID, i, p)
+	botInfo.ReplyMsg(fmt.Sprintf("获取%s丹药成功", i.Name))
 }

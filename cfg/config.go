@@ -36,6 +36,13 @@ type Level struct {
 	RadioMax int    `json:"radio_max"`
 }
 
+type Item struct {
+	Id   int    `json:"id""`
+	Name string `json:"name""`
+	Type string `json:"type""`
+	Desc string `json:"desc""`
+}
+
 type Map struct {
 	X float64 `json:"x""`
 	Y float64 `json:"y"`
@@ -54,6 +61,9 @@ var PathMentalLua map[string]string
 
 // PathSpecialLua 特技名-lua脚本位置映射
 var PathSpecialLua map[string]string
+
+// ItemList 道具列表
+var ItemList []Item
 
 func GetConfig() *Config {
 	return &config
@@ -82,6 +92,14 @@ func init() {
 	mapLocation := "./cfg/file/json/map.json"
 	content, err = os.ReadFile(mapLocation)
 	err = json.Unmarshal(content, &MapLocation)
+	if err != nil {
+		log.Println("解析配置文件出错， err = ", err)
+		os.Exit(1)
+	}
+
+	itemPath := "./cfg/file/json/item_info.json"
+	content, err = os.ReadFile(itemPath)
+	err = json.Unmarshal(content, &ItemList)
 	if err != nil {
 		log.Println("解析配置文件出错， err = ", err)
 		os.Exit(1)

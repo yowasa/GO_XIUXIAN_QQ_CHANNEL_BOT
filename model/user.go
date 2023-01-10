@@ -93,10 +93,6 @@ func (u *User) Exist() bool {
 	return true
 }
 
-func (u User) Create() {
-	db.Create(&u)
-}
-
 func (u *User) UserInfo() {
 	db.Where("user_id = ? and dead != true", u.UserId).First(u)
 }
