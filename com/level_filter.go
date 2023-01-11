@@ -18,11 +18,8 @@ func getExpByPractice(botInfo *BotInfo) {
 		botInfo.ReplyMsg(u.GetStatusMsg())
 		return
 	}
-	u.BaseInfo.Status = 1
-	now := time.Now()
-	u.BaseInfo.StatusStartTime = &now
+	u.SetStatusBusy(1, "修炼")
 	botInfo.ReplyMsg("你开始进行修炼")
-	u.Save()
 }
 
 // 停止修炼

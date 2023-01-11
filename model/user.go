@@ -227,15 +227,34 @@ func (u *User) CheckFree() bool {
 	return u.BaseInfo.Status == 0
 }
 
+// SetStatusBusy 修改状态
+func (u *User) SetStatusBusy(status int, msg string) {
+	u.BaseInfo.Status = status
+	u.BaseInfo.StatusAction = msg
+	now := time.Now()
+	u.BaseInfo.StatusStartTime = &now
+	u.Save()
+}
+
+// SetStatusFree 修改状态至空闲状态
+func (u *User) SetStatusFree() {
+	u.BaseInfo.Status = 0
+	u.BaseInfo.StatusAction = ""
+	now := time.Now()
+	u.BaseInfo.StatusStartTime = &now
+	u.Save()
+}
+
 // GetStatusMsg 获取状态描述
 func (u *User) GetStatusMsg() string {
-	switch u.BaseInfo.Status {
-	case 1:
-		return fmt.Sprintf("%s正在修炼中 无法进行其他行动", u.UserName)
-	case 2:
-		return fmt.Sprintf("%s正处于濒死状态 无法进行其他行动", u.UserName)
-	}
-	return ""
+	return fmt.Sprintf("%s正处于%s状态 无法进行其他行动", u.UserName, u.BaseInfo.StatusAction)
+	//switch u.BaseInfo.Status {
+	//case 1:
+	//	return fmt.Sprintf("%s正在修炼中 无法进行其他行动", u.UserName)
+	//case 2:
+	//	return fmt.Sprintf("%s正处于濒死状态 无法进行其他行动", u.UserName)
+	//}
+	//return ""
 }
 
 // GetExpMsg 获取当前经验描述
