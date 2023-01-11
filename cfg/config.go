@@ -62,8 +62,15 @@ var PathMentalLua map[string]string
 // PathSpecialLua 特技名-lua脚本位置映射
 var PathSpecialLua map[string]string
 
+// PathPillLua 丹药-lua脚本位置映射
+var PathPillLua map[string]string
+
 // ItemList 道具列表
 var ItemList []Item
+
+var ItemNameMap map[string]Item
+
+var ItemIdMap map[int]Item
 
 func GetConfig() *Config {
 	return &config
@@ -119,6 +126,19 @@ func init() {
 	PathSpecialLua, err = GetAllFile(specialPath)
 	if err != nil {
 		fmt.Println("read dir fail:", err)
+	}
+
+	pillPath := "./cfg/file/lua/pill"
+	PathPillLua, err = GetAllFile(pillPath)
+	if err != nil {
+		fmt.Println("read dir fail:", err)
+	}
+	ItemNameMap = make(map[string]Item)
+	ItemIdMap = make(map[int]Item)
+	//初始化item映射
+	for _, i := range ItemList {
+		ItemNameMap[i.Name] = i
+		ItemIdMap[i.Id] = i
 	}
 
 }

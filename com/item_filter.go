@@ -1,6 +1,7 @@
-package item
+package com
 
 import (
+	"GO_XIUXIAN_QQ_CHANNEL_BOT/cfg"
 	"GO_XIUXIAN_QQ_CHANNEL_BOT/model"
 	"encoding/json"
 	"fmt"
@@ -9,7 +10,43 @@ import (
 	"log"
 )
 
-/*丹药处理*/
+// 修炼获取经验
+func useItem(bot *BotInfo) {
+	//校验人物状态
+	u := bot.CurrentUser
+	if !u.CheckFree() {
+		bot.ReplyMsg(u.GetStatusMsg())
+		return
+	}
+	ui := model.SearchItem(u.ID, bot.Content)
+	if ui.Num <= 0 {
+		bot.ReplyMsg(fmt.Sprintf("你身上没有名为%s的道具", bot.Content))
+		return
+	}
+	i := cfg.ItemIdMap[ui.ItemId]
+	if i.Type == "丹药" {
+		UsePill(bot, &ui)
+		return
+	}
+
+}
+
+func UsePill(bot *BotInfo, ui *model.UserItem) {
+	i := cfg.ItemIdMap[ui.ItemId]
+	path := cfg.PathPillLua[i.Name]
+	detail := model.BuildUserDetail(bot.CurrentUser)
+	content := PillContent{
+		User: detail,
+		Item: ui,
+	}
+	execLua(&content, path, "usePill")
+	if content.Result {
+		ui.Num -= 1
+		ui.Save()
+		bot.CurrentUser.Save()
+	}
+	bot.ReplyMsg(content.Msg)
+}
 
 type PillContent struct {
 	User   *model.UserDetail
@@ -51,6 +88,6 @@ func execLua(content *PillContent, luaPath string, method string) {
 	// 从堆栈中删除返回值
 	l.Pop(1)
 	//var newUser UserDetail
-	err = json.Unmarshal([]byte(fmt.Sprint(ret)), &c)
-	content = &c
+	err = json.Unmarshal([]byte(fmt.Sprint(ret)), &content)
+	//content = &c
 }

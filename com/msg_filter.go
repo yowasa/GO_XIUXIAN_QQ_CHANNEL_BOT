@@ -1,7 +1,8 @@
 package com
 
 import (
-	"GO_XIUXIAN_QQ_CHANNEL_BOT/item"
+	"GO_XIUXIAN_QQ_CHANNEL_BOT/cfg"
+	"GO_XIUXIAN_QQ_CHANNEL_BOT/model"
 	"GO_XIUXIAN_QQ_CHANNEL_BOT/util"
 	"fmt"
 )
@@ -21,8 +22,10 @@ func init() {
 	ATFilter["停止修炼"] = stopGetExpByPractice
 	ATFilter["升级"] = levelUp
 	ATFilter["突破"] = stageUp
+	ATFilter["使用"] = useItem
 
 	//====== done ========
+	ATFilter["获取丹药"] = getPill
 	ATFilter["/test"] = testFilter
 	ATFilter["移动"] = moveFilter
 	ATFilter["战斗"] = battleFilter
@@ -37,10 +40,31 @@ func init() {
 }
 
 func testFilter(botInfo *BotInfo) {
-	util.RandomN(3)
-	pinzhi := []string{"凡品", "良品", "极品"}
-	p := pinzhi[util.RandomN(3)]
-	i := item.ItemNameMap["培元丹"]
-	item.AddPill(botInfo.CurrentUser.ID, i, p)
+	pinzhi := []string{"下品", "中品", "上品", "极品"}
+	p := pinzhi[util.RandomN(4)]
+	i := cfg.ItemNameMap["培元丹"]
+	AddPill(botInfo.CurrentUser.ID, i, p)
 	botInfo.ReplyMsg(fmt.Sprintf("获取%s丹药成功", i.Name))
+}
+
+func getPill(botInfo *BotInfo) {
+	pinzhi := []string{"下品", "中品", "上品", "极品"}
+	p := pinzhi[util.RandomN(4)]
+	i := cfg.ItemNameMap["培元丹"]
+	AddPill(botInfo.CurrentUser.ID, i, p)
+	botInfo.ReplyMsg(fmt.Sprintf("获取%s丹药成功", i.Name))
+}
+
+// AddPill 获得丹药 quality：=[]string{"下品", "中品", "上品", "极品"}选一个
+func AddPill(userId uint, item cfg.Item, quality string) {
+	fullName := quality + item.Name
+	ui := model.SearchItem(userId, fullName)
+	ui = model.UserItem{
+		UserId:   userId,
+		ItemId:   item.Id,
+		ItemName: fullName,
+		Num:      ui.Num + 1,
+		Attr:     quality,
+	}
+	ui.Save()
 }
