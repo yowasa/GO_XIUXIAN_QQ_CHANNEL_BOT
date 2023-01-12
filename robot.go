@@ -104,6 +104,7 @@ func main() {
 	}
 
 	registerMsgPush()
+	go registerEventTimer()
 	// 初始化所有的子频道及用户组到常量map中
 	initChannel()
 	var atMessage event.ATMessageEventHandler = atMessageEventHandler
@@ -127,6 +128,24 @@ func registerMsgPush() {
 	//*表示任意值  ？表示不确定值，只能用于星期和日
 	//这里表示每天15:53分发送消息
 	timer.AddFunc("0 53 15 * * ?", activeMsgPush)
+	timer.Start()
+}
+func registerEventTimer() {
+	timer := cron.New()
+	timer.AddFunc("*/5 * * * *", func() {
+		log.Println("每隔20秒执行一次")
+		events := model.GetNeedToDeal()
+		for _, event := range *events {
+			channelId := event.ChannelId
+			msgId := event.MsgId
+			content := message.MentionUser(event.UserId) + event.Msg
+			if channelId != "" {
+				//MsgID 为空字符串表示主动消息
+				api.PostMessage(ctx, channelId, &dto.MessageToCreate{MsgID: msgId, Content: content})
+			}
+			event.Del()
+		}
+	})
 	timer.Start()
 }
 

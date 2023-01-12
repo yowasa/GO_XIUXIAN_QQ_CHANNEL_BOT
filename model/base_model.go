@@ -33,6 +33,7 @@ func init() {
 		User{},
 		UserItem{},
 		UserFlag{},
+		Event{},
 	)
 	db = myDb
 

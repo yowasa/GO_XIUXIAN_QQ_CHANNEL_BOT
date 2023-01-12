@@ -5,7 +5,6 @@ import (
 	"GO_XIUXIAN_QQ_CHANNEL_BOT/model"
 	"github.com/spf13/cast"
 	"github.com/tencent-connect/botgo/dto"
-	"github.com/tencent-connect/botgo/dto/message"
 	"math"
 	"time"
 )
@@ -35,8 +34,11 @@ func moveFilter(bot *BotInfo) {
 	user.SetStatusBusy(1, "移动")
 	bot.ReplyMsg("你开始移动中,大约需要时间" + cast.ToString(needTime) + "分钟")
 	go moveToChannel(needTime, bot, channel.RoleId, user, destination)
-	bot.Data.ChannelID = channel.ChannelId
-	bot.ReplyMsgNotRef(message.MentionUser(user.UserId) + " 你已移动到:" + destination)
+
+	endTime := time.Now().Add(time.Minute * time.Duration(needTime))
+	msg := " 你已移动到:" + destination
+	model.NewEvent(*user, channel.ChannelId, bot.Data.ID, msg, endTime)
+
 }
 
 func moveToChannel(needTime int, bot *BotInfo, roleId string, user *model.User, destination string) {
