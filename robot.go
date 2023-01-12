@@ -132,8 +132,8 @@ func registerMsgPush() {
 }
 func registerEventTimer() {
 	timer := cron.New()
-	timer.AddFunc("*/5 * * * *", func() {
-		log.Println("每隔20秒执行一次")
+	timer.AddFunc("* 0/1 * * * ? ", func() {
+		log.Println("每隔1分钟执行一次")
 		events := model.GetNeedToDeal()
 		for _, event := range *events {
 			channelId := event.ChannelId

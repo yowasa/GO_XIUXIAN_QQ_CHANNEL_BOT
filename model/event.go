@@ -44,6 +44,6 @@ func (e *Event) SelectAll() *[]Event {
 func GetNeedToDeal() *[]Event {
 	var events *[]Event
 	now := time.Now()
-	db.Debug().Find(&events, "end_at <= ?", now)
+	db.Find(&events, "end_at <= ?", now)
 	return events
 }
